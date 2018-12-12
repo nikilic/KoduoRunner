@@ -21,22 +21,34 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
-    String appcode =
+    /*String appcode =
                     "app proba\n" +
                     "name Proba\n" +
                     "author nikilic\n" +
                     "main probabutton\n" +
                     "texttext set \"Klikni dugme\"\n" +
                     "act probabutton\n" +
-                    "textsize set 16\n" +
-                    "__background__ __black__\n" +
-                            "add text \"ZDRAVO!!!\",__black__,24\n" +
+                    "add text \"ZDRAVO!!!\",__black__,24\n" +
                     "add text texttext,__black__,16\n" +
                     "add button \"Klikni me!\",klik\n" +
                     ";\n" +
                     "fun klik\n" +
                     "message \"Zdravo\"\n" +
-                    ";";
+                    ";";*/
+    String appcode = "app proba\n" +
+            "name Proba\n" +
+            "author nikilic\n" +
+            "main probabutton\n" +
+            "texttext set \"Klikni dugme\"\n" +
+            "var1 set \"proba\"\n" +
+            "var2 set var1\n" +
+            "var3 set 10\n" +
+            "num var4 set 10\n" +
+            "num var5 set var4\n" +
+            "act probabutton\n" +
+            "add text \"ZDRAVO!!!\",__black__,24\n" +
+            "add text texttext,__black__,16\n" +
+            "add button \"Klikni me!\",klik\n";
 
     boolean flag;
     Map<String, String> SysVar, UserVar, Acts, Funs;
@@ -103,10 +115,38 @@ public class MainActivity extends AppCompatActivity {
                 UserVar.put(line.split(" ")[0],getValue(line,2));
                 Log.i("KDINFO","CHANGED " + line.split(" ")[0]);
             }
+            //NUM CODE
+            else if(line.split(" ")[0].equals("num")){
+                switch (line.split(" ")[2]){
+                    case "set":
+                        UserVar.put(line.split(" ")[1],String.valueOf(Integer.parseInt(getValue(line.split(" ")[3],0))));
+                        break;
+                    case "plus":
+                        UserVar.put(line.split(" ")[1],String.valueOf(Integer.parseInt(getValue(line.split(" ")[3],0)) + Integer.parseInt(UserVar.get(getValue(line.split(" ")[1],0)))));
+                        break;
+                    case "minus":
+                        UserVar.put(line.split(" ")[1],String.valueOf(Integer.parseInt(getValue(line.split(" ")[3],0)) - Integer.parseInt(UserVar.get(getValue(line.split(" ")[1],0)))));
+                        break;
+                    case "times":
+                        UserVar.put(line.split(" ")[1],String.valueOf(Integer.parseInt(getValue(line.split(" ")[3],0)) * Integer.parseInt(UserVar.get(getValue(line.split(" ")[1],0)))));
+                        break;
+                    case "divide":
+                        UserVar.put(line.split(" ")[1],String.valueOf(Integer.parseInt(getValue(line.split(" ")[3],0)) / Integer.parseInt(UserVar.get(getValue(line.split(" ")[1],0)))));
+                        break;
+                    case "mod":
+                        UserVar.put(line.split(" ")[1],String.valueOf(Integer.parseInt(getValue(line.split(" ")[3],0)) % Integer.parseInt(UserVar.get(getValue(line.split(" ")[1],0)))));
+                        break;
+                }
+            }
             line = lineReader(appReader);
         }
 
         Log.i("KDINFO", "problem???");
+        Log.i("VAROVI",UserVar.get("var1"));
+        Log.i("VAROVI",UserVar.get("var2"));
+        Log.i("VAROVI",UserVar.get("var3"));
+        Log.i("VAROVI",UserVar.get("var4"));
+        Log.i("VAROVI",UserVar.get("var5"));
         LinearLayout contentView = createContentView(SysVar.get("main"), getApplicationContext());
         LinearLayout.LayoutParams linLayoutParam = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
 
@@ -124,13 +164,32 @@ public class MainActivity extends AppCompatActivity {
         Log.i("KDINFO", "LinearLayout");
         String line = lineReader(actReader);
         while(!line.equals("error")){
-            //GENERAL INFO CODE
-            if(line.split(" ")[0].equals("background")){
-                parent.setBackgroundColor(Color.parseColor(getValue(line,1)));
-            }
             //SET CODE
-            else if(spaceCount(line) > 2 && line.split(" ")[1].equals("set")){
+            if(spaceCount(line) > 2 && line.split(" ")[1].equals("set")){
                 UserVar.put(line.split(" ")[0],getValue(line,2));
+            }
+            //NUM CODE
+            else if(line.split(" ")[0].equals("num")){
+                switch (line.split(" ")[2]){
+                    case "set":
+                        UserVar.put(line.split(" ")[1],String.valueOf(Integer.parseInt(getValue(line.split(" ")[3],0))));
+                        break;
+                    case "plus":
+                        UserVar.put(line.split(" ")[1],String.valueOf(Integer.parseInt(getValue(line.split(" ")[3],0)) + Integer.parseInt(UserVar.get(getValue(line.split(" ")[1],0)))));
+                        break;
+                    case "minus":
+                        UserVar.put(line.split(" ")[1],String.valueOf(Integer.parseInt(getValue(line.split(" ")[3],0)) - Integer.parseInt(UserVar.get(getValue(line.split(" ")[1],0)))));
+                        break;
+                    case "times":
+                        UserVar.put(line.split(" ")[1],String.valueOf(Integer.parseInt(getValue(line.split(" ")[3],0)) * Integer.parseInt(UserVar.get(getValue(line.split(" ")[1],0)))));
+                        break;
+                    case "divide":
+                        UserVar.put(line.split(" ")[1],String.valueOf(Integer.parseInt(getValue(line.split(" ")[3],0)) / Integer.parseInt(UserVar.get(getValue(line.split(" ")[1],0)))));
+                        break;
+                    case "mod":
+                        UserVar.put(line.split(" ")[1],String.valueOf(Integer.parseInt(getValue(line.split(" ")[3],0)) % Integer.parseInt(UserVar.get(getValue(line.split(" ")[1],0)))));
+                        break;
+                }
             }
             //ADD CODE
             else if(line.split(" ")[0].equals("add")){
@@ -190,6 +249,29 @@ public class MainActivity extends AppCompatActivity {
             //SET CODE
             if(spaceCount(line) > 2 && line.split(" ")[1].equals("set")){
                 UserVar.put(line.split(" ")[0],getValue(line,2));
+            }
+            //NUM CODE
+            else if(line.split(" ")[0].equals("num")){
+                switch (line.split(" ")[2]){
+                    case "set":
+                        UserVar.put(line.split(" ")[1],String.valueOf(Integer.parseInt(getValue(line.split(" ")[3],0))));
+                        break;
+                    case "plus":
+                        UserVar.put(line.split(" ")[1],String.valueOf(Integer.parseInt(getValue(line.split(" ")[3],0)) + Integer.parseInt(UserVar.get(getValue(line.split(" ")[1],0)))));
+                        break;
+                    case "minus":
+                        UserVar.put(line.split(" ")[1],String.valueOf(Integer.parseInt(getValue(line.split(" ")[3],0)) - Integer.parseInt(UserVar.get(getValue(line.split(" ")[1],0)))));
+                        break;
+                    case "times":
+                        UserVar.put(line.split(" ")[1],String.valueOf(Integer.parseInt(getValue(line.split(" ")[3],0)) * Integer.parseInt(UserVar.get(getValue(line.split(" ")[1],0)))));
+                        break;
+                    case "divide":
+                        UserVar.put(line.split(" ")[1],String.valueOf(Integer.parseInt(getValue(line.split(" ")[3],0)) / Integer.parseInt(UserVar.get(getValue(line.split(" ")[1],0)))));
+                        break;
+                    case "mod":
+                        UserVar.put(line.split(" ")[1],String.valueOf(Integer.parseInt(getValue(line.split(" ")[3],0)) % Integer.parseInt(UserVar.get(getValue(line.split(" ")[1],0)))));
+                        break;
+                }
             }
             //MESSAGE CODE
             else if(line.split(" ")[0].equals("message")){
